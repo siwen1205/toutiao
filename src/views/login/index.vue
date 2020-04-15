@@ -53,10 +53,22 @@ export default {
   },
   methods: {
     login () {
-      // get dom object $refs
-      this.$refs.loginForm.validate(function (isOk) {
+      // get Dom object $refs
+      this.$refs.loginForm.validate(isOk => {
         if (isOk) {
-
+          this.$axios({
+            url: '/authorizations',
+            data: this.loginForm,
+            method: 'post'
+          }).then(r => {
+            window.localStorage.setItem('user-token', r.data.data.token)
+            this.$router.push('/')
+          }).catch(() => {
+            this.$message({
+              type: 'warning',
+              message: 'error message'
+            })
+          })
         }
       })
     }
