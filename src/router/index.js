@@ -6,6 +6,7 @@ import Home from '@/views/home' // @ == src dir
 import Article from '@/views/article'
 import Publish from '@/views/publish'
 import Comment from '@/views/comment'
+import CommentList from '@/views/comment-list'
 
 import NProgress from '_nprogress@0.2.0@nprogress'
 
@@ -36,6 +37,11 @@ const routes = [
       {
         path: '/comment',
         component: Comment
+      },
+      {
+        path: '/comment/:articleId',
+        component: CommentList,
+        props: true
       }
     ]
   },
