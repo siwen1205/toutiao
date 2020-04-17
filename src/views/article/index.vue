@@ -17,11 +17,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道列表">
-          <el-select placeholder="select" v-model="filterForm.channel_id">
-            <!-- v-for 必须有 :key -->
-            <el-option label="所有频道" :value="null"></el-option>
-            <el-option :label="item.name" :value="item.id" v-for="item in channels" :key="item.id"></el-option>
-          </el-select>
+          <channel-select v-model="filterForm.channel_id"></channel-select>
         </el-form-item>
         <el-form-item label="选择时间">
           <el-date-picker
@@ -65,9 +61,9 @@
         </el-table-column>
         <el-table-column prop="pubdate" label="发布日期"></el-table-column>
         <el-table-column prop="address" label="操作">
-          <template>
+          <template slot-scope="scope">
             <el-button type="primary" size="mini">edit</el-button>
-            <el-button type="danger" size="mini">delete</el-button>
+            <el-button type="danger" size="mini" @click="onDelete(scope.row.id)">delete</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -84,8 +80,12 @@
 </template>
 
 <script>
+import channelSelect from '@/components/channels'
 export default {
   name: 'articles', // 组件名字
+  components: {
+    'channel-select': channelSelect
+  },
   data () {
     return {
       filterForm: {
@@ -120,25 +120,26 @@ export default {
       ],
       totalCount: 0,
       loading: true,
-      channels: []
+      // channels: [],
+      page: 1
     }
   },
   created () {
     this.loadArticles(1)
-    this.loadChannels()
   },
   methods: {
     // filter button
 
     loadArticles (page = 1) {
+      this.page = page
       this.loading = true
-      const token = window.localStorage.getItem('user-token')
+      // const token = window.localStorage.getItem('user-token')
       this.$axios({
         method: 'GET',
         url: '/articles',
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
+        // headers: {
+        //   Authorization: `Bearer ${token}`
+        // },
         params: {
           page,
           per_page: 10, // at least 10 lists per page
@@ -155,21 +156,30 @@ export default {
         })
         .catch(() => {
           // failed
+          // console.log(err)
         })
         .finally(() => {
           this.loading = false
         })
     },
-    loadChannels () {
-      this.$axios({
-        method: 'GET',
-        url: '/channels'
-      }).then(r => {
-        this.channels = r.data.data.channels
-      })
-    },
     onPagechange (page) {
       this.loadArticles(page)
+    },
+    onDelete (articleId) {
+      this.$axios({
+        method: 'DELETE',
+        url: `/articles/${articleId}` // articleId 需要 toString() 方法转为字符串，此处字符串拼接可省略
+        // headers: {
+        //   Authorization: `Bearer ${window.localStorage.getItem('user-token')}`
+        // }
+      }).then(() => {
+        // alert('删除成功')
+        this.$message({
+          message: '成功',
+          type: 'success'
+        })
+        this.loadArticles(this.page)
+      })
     }
   }
 }

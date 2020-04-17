@@ -45,7 +45,7 @@ const routes = [
 const router = new VueRouter({
   routes
 })
-// check token ? ref:'router.vuejs.org'
+// check token ? 参考网址 - 'router.vuejs.org'
 router.beforeEach((to, from, next) => {
   NProgress.start()
   // login page do not require token check
