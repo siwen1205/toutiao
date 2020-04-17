@@ -9,8 +9,8 @@
         <el-submenu index='2'>
           <template slot="title">Management Content</template>
           <el-menu-item index="/publish">publish</el-menu-item>
-          <el-menu-item index="article">article Lists</el-menu-item>
-          <el-menu-item index="2-3">Management Review</el-menu-item>
+          <el-menu-item index="/article">article Lists</el-menu-item>
+          <el-menu-item index="/comment">Management Comments</el-menu-item>
           <el-menu-item index="2-4">Management Material</el-menu-item>
         </el-submenu>
         <el-submenu index='3'>
@@ -28,7 +28,8 @@
         <layout-header></layout-header>
       </el-header>
       <el-main>
-        <router-view></router-view>
+        <router-view :key="$route.path"></router-view>
+        <!-- 同一个路由组件名字相同 路径不同时 路径切换从路由缓存中获取数据 为了避免数据冲突 需在 router-view 绑定 :key="$route.path" -->
       </el-main>
     </el-container>
   </el-container>

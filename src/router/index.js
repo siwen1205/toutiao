@@ -5,6 +5,7 @@ import Login from '../views/login'
 import Home from '@/views/home' // @ == src dir
 import Article from '@/views/article'
 import Publish from '@/views/publish'
+import Comment from '@/views/comment'
 
 import NProgress from '_nprogress@0.2.0@nprogress'
 
@@ -26,7 +27,15 @@ const routes = [
       },
       {
         path: '/publish',
-        component: Publish
+        component: Publish //  同一个路由组件名字相同 路径不同时 路径切换从路由缓存中获取数据 为了避免数据冲突 需在 router-view 绑定 :key="$route.path"
+      },
+      {
+        path: '/publish/:articleId',
+        component: Publish // ======================
+      },
+      {
+        path: '/comment',
+        component: Comment
       }
     ]
   },
